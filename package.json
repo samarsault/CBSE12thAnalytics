@@ -1,0 +1,19 @@
+{
+  "name": "dav12",
+  "version": "1.0.0",
+  "description": "Class 12 Results Summary",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "commander": "^2.15.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.1.2",
+    "request": "^2.87.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+	<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+	
+	<title>12th Result Analytics</title>
+</head>
+<body>
+	<div id="app">
+	<header>
+		<h1 align="center">DAV GPM 12<sup>th</sup> Results Analytics</h1>
+	</header>
+
+	<section>
+		<h2 class="section-header">Aggregate Analysis</h2>
+		<p style="font-size: .8em;">No. of Students v/s Range</p>
+		<aggr-chart></aggr-chart>
+	</section>
+
+	<section>
+		<h2 class="section-header">Subject-Wise Analysis</h2>
+		<p style="font-size: .8em;">No. of Students v/s Range</p>
+		<p style="font-size: .8em;">Click on a subject to show/hide the respective graph</p>
+
+		<line-chart></line-chart>
+
+		<table>
+			<thead>
+				<tr style="background-color: #fff">
+					<th>Subject</th>
+					<th>Average %</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item, key) in avg">
+					<td>{{ dic[key] }}</td>
+					<td>{{ item }}</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+	</div>
+	<footer style="background-color:#4062BB;color:#fff">
+			<p align="center">All data has been collected using automated tools. Click <a href="https://github.com/thelehhman/CBSE12thAnalytics">here</a> to analyse your own dataset</p>
+	</footer>
+	<footer>
+		<p align="center">By <a href="https://github.com/thelehhman">Samarjeet Singh</a></p>
+	</footer>
+	
+	<script>
+		function convertHex(hex, opacity) {
+				hex = hex.replace('#', '');
+				r = parseInt(hex.substring(0, 2), 16);
+				g = parseInt(hex.substring(2, 4), 16);
+				b = parseInt(hex.substring(4, 6), 16);
+
+				result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+				return result;
+			}
+
+		var xhr = new XMLHttpRequest();
+		var analytics;
+		xhr.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				// Typical action to be performed when the document is ready:
+				analytics = JSON.parse(this.responseText);
+			}
+		};
+		xhr.open('GET', 'analytics.json', false);
+		xhr.send();
+		var colors = ['#0B4F6C', '#f87979', '#27ae60', '#2980b9', '#8a6d3b', '#ff9600', '#ba34db', '#12cab0', '#d0f508', '#DBB3B1', '#59C3C3', '#52489C', '#F45B69'];
+		Vue.component('line-chart', {
+			extends: VueChartJs.Line,
+			mounted: function() {
+				var options = {
+					labels: ["0-80", "80-85", "85-90", "90-95", "95-100"],
+					datasets: [ ]
+				};
+				var i = 0;
+				var subjDic = analytics['subjDic'];
+				for (var key in analytics) {
+					if (key != 'aggr' && key != 'avg' && key != 'subjDic') {
+						options['datasets'].push({
+							label: subjDic[key],
+							borderColor: colors[i],
+							backgroundColor: convertHex(colors[i], 60),
+							data: analytics[key]
+						});
+						i++;
+						console.log(colors[i]);
+					}
+				}
+				this.renderChart(options, { responsive: true, maintainAspectRatio: false });
+			}
+			
+		});
+		Vue.component('aggr-chart', {
+			extends: VueChartJs.Line,
+			mounted: function (){
+			var options = {
+					labels: ["0-80", "80-85", "85-90", "90-95", "95-100"],
+					datasets: [ {
+						label: 'No. of Students',
+						data: analytics['aggr'],
+						backgroundColor: 'rgba(244,91,105,0.5)',
+						borderColor: 'rgb(244,91,105)'
+					}]
+				};
+			this.renderChart(options, {
+				responsive: true,
+				maintainAspectRatio: false
+			});
+			}
+			
+		});
+		var app = new Vue({
+			el: '#app',
+			data: {
+				avg: analytics.avg,
+				dic: analytics.subjDic
+			}
+		});
+	</script>
+</body>
+</html>

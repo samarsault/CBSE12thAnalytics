@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+var fetch = require('./fetch');
+
+if (process.argv.length < 6) {
+    console.log("Fetch Data");
+    console.log("Usage: <start roll> <end roll> < school no. > < centre no. >");
+    console.log("Data is saved to data.json & analytics.json");
+}
+else {
+    var startRoll = parseInt(process.argv[2]);
+    var endRoll = parseInt(process.argv[3]);
+    var schoolNo = (process.argv[4]);
+    var centreNo = (process.argv[5]);
+
+    fetch(startRoll, endRoll, schoolNo, centreNo);
+}
+
