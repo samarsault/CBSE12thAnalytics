@@ -26,9 +26,11 @@ section {
 
 header {
   border-bottom: 1px solid #eee;
-  background-color: #4062BB !important;
+  background: rgb(57,125,140);
+  background: linear-gradient(0deg, rgba(57,125,140,0.8953956582633054) 0%, rgba(64,98,187,1) 35%, rgba(82,72,156,1) 100%);
   color: #f6f6f6;
   margin-bottom: 1em;
+  padding: 5rem !important;
 }
 header, footer {
     /* background-color: #e1edfb; */
